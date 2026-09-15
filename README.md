@@ -1,21 +1,19 @@
-# Cipher — Client-Side File Encryptor
+# Cipher — Client-Side File Encryptor Website
 
-Cipher is a zero-trust, 100% client-side file encryption web application built using standard browser Web Crypto APIs (**AES-256-GCM** and **PBKDF2**).
+Cipher is a modern, zero-trust, 100% client-side file encryption web application and landing page built using standard browser Web Crypto APIs (**AES-256-GCM** and **PBKDF2**).
 
-## Features
+## Features & Website Highlights
 
-- **End-to-End Local Processing**: Your files and passwords never leave your web browser or local device.
-- **AES-256-GCM Authenticated Encryption**: Provides confidentiality along with built-in message integrity checking to prevent tampering or corruption.
-- **PBKDF2 Key Derivation**: High-iteration key derivation (`250,000` iterations of `SHA-256` with a `16-byte` cryptographically secure random salt).
-- **Drag & Drop Interface**: Easily encrypt and decrypt files of any type and size.
-- **Preserved Filenames**: Encrypted `.cipher` containers safely store the original UTF-8 filename inside the container header so it can be perfectly restored upon decryption.
-- **Responsive & Modern Design System**: Uses Google Fonts (`Open Sans` & `Merriweather`), dark-themed cards, password strength indicators, and clean control feedback.
+- **Complete Web Landing Page**: Includes Navigation, Hero Masthead, Integrated Working Encryptor Tool, Privacy Features Grid, Security Specifications, and Footer using standard `Open Sans` and `Merriweather` typography and styling.
+- **End-to-End Local Encryption**: Your files and passwords never leave your browser memory.
+- **AES-256-GCM Authenticated Encryption**: Guarantees data confidentiality and prevents file corruption or tampering.
+- **PBKDF2 Key Derivation**: High-iteration key derivation (`250,000` iterations of `SHA-256` with a `16-byte` cryptographically random salt).
+- **Drag & Drop Uploads**: Process files of any type and size.
+- **Output Naming**: Encrypted output files are generated as `filename.ext.cipher` and retain their original UTF-8 filename inside the header for seamless decryption.
 
 ---
 
 ## Technical Specifications & `.cipher` File Format Layout
-
-The custom binary format produced by Cipher (`.cipher`) contains a compact header followed by the AES-256-GCM ciphertext payload.
 
 ```
 +---------------------------------------------------------------------------------------------+
@@ -38,10 +36,8 @@ The custom binary format produced by Cipher (`.cipher`) contains a compact heade
 
 ## How to Run
 
-Since Cipher is a zero-dependency, pure client-side web application, no server installation or build steps are required.
-
-1. Open `index.html` in any modern web browser (Chrome, Edge, Firefox, Safari).
-2. Select **Encrypt** or **Decrypt** mode.
+1. Open `index.html` in any modern web browser.
+2. Select **Encrypt** or **Decrypt** mode in the Cipher tool section.
 3. Drop a file into the dropzone (or click to browse).
-4. Enter a strong password.
-5. Click **Encrypt File** / **Decrypt File** to process and download the resulting file.
+4. Enter a password.
+5. Click **Encrypt file** / **Decrypt file** to process locally and download `filename.ext.cipher` or restored original file.

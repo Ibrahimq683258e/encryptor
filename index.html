@@ -14,18 +14,17 @@
     --primary-dim: rgba(240, 95, 64, 0.15);
     --primary-line: rgba(240, 95, 64, 0.35);
 
-    --bg: #14171c;
-    --bg-grad-1: #191d24;
-    --bg-grad-2: #0f1115;
-    --surface: #1e2229;
-    --surface-2: #252a33;
-    --surface-3: #2d333e;
+    --bg: #111317;
+    --bg-alt: #171a21;
+    --surface: #1e222a;
+    --surface-2: #262b35;
+    --surface-3: #2f3542;
 
-    --border: #363c47;
-    --border-soft: #2a2f38;
+    --border: #383e4a;
+    --border-soft: #2a2f39;
 
     --text: #f8f9fa;
-    --text-2: #a0a7b5;
+    --text-2: #a5acb9;
     --text-3: #6c757d;
 
     --success: #28a745;
@@ -38,223 +37,185 @@
     --font-mono: 'Fira Code', monospace;
 
     --radius-window: 20px;
+    --radius-card: 16px;
     --radius-control: 10px;
     --radius-pill: 50px;
-    --shadow-window: 0 30px 60px -12px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    --shadow-window: 0 30px 60px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; }
-
+  html { scroll-behavior: smooth; }
   body {
     font-family: var(--font-sans);
-    background:
-      radial-gradient(800px 600px at 50% 15%, rgba(240, 95, 64, 0.09), transparent 70%),
-      radial-gradient(1000px 800px at 85% 85%, rgba(30, 42, 60, 0.35), transparent 70%),
-      var(--bg);
+    background-color: var(--bg);
     color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
   }
 
   ::selection { background: var(--primary-dim); color: var(--primary); }
-  button { font-family: inherit; }
-  :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 6px; }
+  a { color: var(--primary); text-decoration: none; transition: color 0.2s; }
+  a:hover { color: var(--primary-hover); }
 
-  /* ---------- Review / Demo State Bar ---------- */
-  .review-bar {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 20px 20px 0px;
+  /* Navbar */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(17, 19, 23, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-soft);
+    padding: 16px 0;
   }
-  .review-inner {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
+  .container {
+    max-width: 1140px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
   }
-  .review-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-3);
+  .nav-brand {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-serif); font-size: 20px; font-weight: 700; color: #fff;
   }
-  .review-nav {
-    display: flex;
-    gap: 4px;
-    background: var(--surface);
-    border: 1px solid var(--border-soft);
-    padding: 4px;
-    border-radius: var(--radius-pill);
+  .nav-brand-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--primary); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(240, 95, 64, 0.4);
   }
-  .review-nav button {
-    background: transparent;
-    border: none;
-    color: var(--text-2);
-    font-size: 12px;
-    font-weight: 600;
-    padding: 6px 14px;
-    border-radius: var(--radius-pill);
-    cursor: pointer;
+  .nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+  .nav-links a { font-size: 14px; font-weight: 600; color: var(--text-2); }
+  .nav-links a:hover { color: #fff; }
+  .btn-nav {
+    background: var(--primary); color: #fff !important;
+    padding: 8px 18px; border-radius: var(--radius-pill);
+    font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
     transition: all 0.2s ease;
   }
-  .review-nav button:hover { color: var(--text); background: var(--surface-3); }
-  .review-nav button.active { color: #fff; background: var(--primary); }
+  .btn-nav:hover { background: var(--primary-hover); transform: translateY(-1px); }
 
-  /* ---------- Stage Layout ---------- */
-  .stage {
-    flex: 1;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 30px 20px 60px;
+  /* Hero / Masthead Section */
+  .masthead {
+    padding: 150px 0 80px;
+    text-align: center;
+    background:
+      radial-gradient(900px 600px at 50% 20%, rgba(240, 95, 64, 0.12), transparent 70%),
+      radial-gradient(1000px 800px at 80% 90%, rgba(30, 42, 60, 0.35), transparent 70%),
+      var(--bg);
+  }
+  .masthead-title {
+    font-family: var(--font-serif);
+    font-size: 42px; font-weight: 900; color: #fff;
+    margin-bottom: 20px; line-height: 1.25;
+  }
+  .masthead-subtitle {
+    font-size: 18px; color: var(--text-2); max-width: 680px; margin: 0 auto 36px;
+  }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--primary); color: #fff;
+    padding: 14px 32px; border-radius: var(--radius-pill);
+    font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    box-shadow: 0 10px 25px -5px rgba(240, 95, 64, 0.5);
+    transition: all 0.2s ease;
+  }
+  .hero-cta:hover { color: #fff; background: var(--primary-hover); transform: translateY(-2px); }
+
+  /* Section Styling */
+  .section { padding: 90px 0; border-bottom: 1px solid var(--border-soft); }
+  .section-alt { background-color: var(--bg-alt); }
+  .section-header { text-align: center; margin-bottom: 60px; }
+  .section-title {
+    font-family: var(--font-serif); font-size: 32px; font-weight: 700; color: #fff;
+    margin-bottom: 12px;
+  }
+  .section-divider {
+    width: 60px; height: 3px; background: var(--primary); margin: 0 auto 16px; border-radius: 2px;
+  }
+  .section-sub { font-size: 16px; color: var(--text-2); max-width: 600px; margin: 0 auto; }
+
+  /* Encryptor Tool Container Section */
+  .tool-section {
+    padding: 60px 0 100px;
+    display: flex; flex-direction: column; align-items: center;
   }
 
   .window {
-    width: 460px;
-    max-width: 100%;
+    width: 480px; max-width: 100%;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-window);
     box-shadow: var(--shadow-window);
-    overflow: hidden;
-    position: relative;
+    overflow: hidden; position: relative;
+    margin: 0 auto;
   }
   .window::before {
-    content: "";
-    position: absolute; inset: 0 0 auto 0; height: 1px;
+    content: ""; position: absolute; inset: 0 0 auto 0; height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
   }
 
-  /* ---------- Window Header ---------- */
+  /* Window Header */
   .window-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     padding: 24px 28px 0;
   }
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+  .brand { display: flex; align-items: center; gap: 12px; }
   .brand-mark {
-    width: 32px; height: 32px;
-    border-radius: 10px;
+    width: 32px; height: 32px; border-radius: 10px;
     background: var(--primary);
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 15px -3px rgba(240, 95, 64, 0.5);
-    color: #fff;
+    box-shadow: 0 4px 15px -3px rgba(240, 95, 64, 0.5); color: #fff;
   }
   .brand-mark svg { width: 18px; height: 18px; stroke-width: 2.2; }
-  .brand-name {
-    font-family: var(--font-serif);
-    font-size: 18px;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: -0.01em;
-  }
+  .brand-name { font-family: var(--font-serif); font-size: 18px; font-weight: 700; color: #fff; }
 
   .local-pill {
     display: flex; align-items: center; gap: 6px;
     font-size: 11px; font-weight: 600; color: var(--text-3);
-    background: var(--surface-2);
-    padding: 4px 10px;
-    border-radius: var(--radius-pill);
-    border: 1px solid var(--border-soft);
+    background: var(--surface-2); padding: 4px 10px;
+    border-radius: var(--radius-pill); border: 1px solid var(--border-soft);
   }
   .local-pill .dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--success);
+    width: 6px; height: 6px; border-radius: 50%; background: var(--success);
     box-shadow: 0 0 0 3px var(--success-dim);
   }
 
-  /* ---------- Mode Segmented Control ---------- */
+  /* Segmented Control Mode */
   .segmented {
-    margin: 22px 28px 0;
-    display: flex;
-    background: var(--surface-2);
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-pill);
-    padding: 4px;
-    position: relative;
+    margin: 22px 28px 0; display: flex;
+    background: var(--surface-2); border: 1px solid var(--border-soft);
+    border-radius: var(--radius-pill); padding: 4px; position: relative;
   }
   .segmented button {
-    flex: 1;
-    position: relative;
-    z-index: 2;
-    background: transparent;
-    border: none;
-    color: var(--text-2);
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 10px 0;
-    border-radius: var(--radius-pill);
-    cursor: pointer;
+    flex: 1; position: relative; z-index: 2;
+    background: transparent; border: none;
+    color: var(--text-2); font-size: 13px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 10px 0; border-radius: var(--radius-pill); cursor: pointer;
     transition: color 0.2s ease;
   }
   .segmented button.active { color: #fff; }
   .segmented .thumb {
-    position: absolute;
-    top: 4px; bottom: 4px; left: 4px;
-    width: calc(50% - 4px);
-    background: var(--primary);
+    position: absolute; top: 4px; bottom: 4px; left: 4px;
+    width: calc(50% - 4px); background: var(--primary);
     border-radius: var(--radius-pill);
     transition: transform 0.28s cubic-bezier(.65,.05,.36,1);
-    z-index: 1;
-    box-shadow: 0 4px 12px rgba(240, 95, 64, 0.3);
+    z-index: 1; box-shadow: 0 4px 12px rgba(240, 95, 64, 0.3);
   }
   .segmented[data-mode="decrypt"] .thumb { transform: translateX(100%); }
 
-  /* ---------- Body Copy ---------- */
-  .body-copy {
-    padding: 18px 28px 28px;
-  }
-  .headline {
-    font-size: 14px;
-    color: var(--text-2);
-    line-height: 1.5;
-    margin-top: 2px;
-  }
+  .body-copy { padding: 18px 28px 28px; }
+  .headline { font-size: 14px; color: var(--text-2); line-height: 1.5; margin-top: 2px; }
 
-  /* ---------- Dropzone ---------- */
+  /* Dropzone */
   .dropzone {
-    margin-top: 18px;
-    border-radius: 16px;
-    border: 2px dashed var(--border);
-    background:
-      repeating-linear-gradient(-45deg, rgba(255,255,255,0.008) 0 12px, transparent 12px 24px),
-      var(--surface-2);
-    padding: 42px 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    margin-top: 18px; border-radius: 16px; border: 2px dashed var(--border);
+    background: repeating-linear-gradient(-45deg, rgba(255,255,255,0.008) 0 12px, transparent 12px 24px), var(--surface-2);
+    padding: 42px 20px; text-align: center; cursor: pointer; transition: all 0.2s ease;
   }
   .dropzone:hover { border-color: var(--primary); background: var(--surface-3); }
-  .dropzone.drag {
-    border-color: var(--primary);
-    background: var(--primary-dim);
-    transform: scale(1.01);
-  }
+  .dropzone.drag { border-color: var(--primary); background: var(--primary-dim); transform: scale(1.01); }
   .dz-icon {
-    width: 50px; height: 50px;
-    margin: 0 auto 14px;
-    border-radius: 50%;
-    background: var(--surface-3);
-    border: 1px solid var(--border);
+    width: 50px; height: 50px; margin: 0 auto 14px; border-radius: 50%;
+    background: var(--surface-3); border: 1px solid var(--border);
     display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s ease;
-    color: var(--primary);
+    transition: all 0.2s ease; color: var(--primary);
   }
   .dropzone:hover .dz-icon { transform: translateY(-3px); background: var(--primary); color: #fff; }
   .dz-icon svg { width: 22px; height: 22px; stroke: currentColor; }
@@ -262,60 +223,33 @@
   .dz-sub { font-size: 13px; color: var(--text-3); }
   .dz-sub b { color: var(--primary); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 
-  /* Hidden file input */
   #fileInput { display: none; }
 
-  /* ---------- File Card ---------- */
+  /* File Card */
   .file-card {
-    margin-top: 18px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 14px 16px;
-    transition: all 0.2s ease;
+    margin-top: 18px; display: flex; align-items: center; gap: 14px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px 16px; transition: all 0.2s ease;
   }
   .file-card:hover { border-color: var(--border-soft); }
   .file-icon {
-    width: 42px; height: 42px;
-    border-radius: 10px;
-    background: var(--surface-3);
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    position: relative;
-    color: var(--primary);
+    width: 42px; height: 42px; border-radius: 10px; background: var(--surface-3);
+    border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; position: relative; color: var(--primary);
   }
   .file-icon svg { width: 20px; height: 20px; stroke: currentColor; }
   .file-ext {
     position: absolute; bottom: -5px; right: -6px;
-    font-family: var(--font-mono);
-    font-size: 8.5px; font-weight: 600; text-transform: uppercase;
-    background: var(--primary);
-    color: #fff;
-    padding: 1px 5px;
-    border-radius: 4px;
-    letter-spacing: .02em;
+    font-family: var(--font-mono); font-size: 8.5px; font-weight: 600; text-transform: uppercase;
+    background: var(--primary); color: #fff; padding: 1px 5px; border-radius: 4px; letter-spacing: .02em;
   }
   .file-meta { flex: 1; min-width: 0; }
-  .file-name {
-    font-size: 14px; font-weight: 600; color: var(--text);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .file-size {
-    font-family: var(--font-mono);
-    font-size: 11.5px; color: var(--text-3); margin-top: 3px;
-  }
+  .file-name { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .file-size { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-3); margin-top: 3px; }
   .file-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
   .icon-btn {
-    width: 30px; height: 30px;
-    border-radius: 8px;
-    border: none; background: transparent;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    color: var(--text-3);
+    width: 30px; height: 30px; border-radius: 8px; border: none; background: transparent;
+    display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-3);
     transition: all 0.15s ease;
   }
   .icon-btn:hover { background: var(--error-dim); color: var(--error); }
@@ -327,31 +261,20 @@
   .file-card.dim { opacity: .65; }
 
   .spin-ring {
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    border-top-color: var(--primary);
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid var(--border); border-top-color: var(--primary);
     animation: spin .8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ---------- Password Section ---------- */
+  /* Password Section */
   .pw-section { margin-top: 18px; display: flex; flex-direction: column; gap: 14px; }
-  .field-label {
-    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-    color: var(--text-2); margin-bottom: 7px; display: block;
-  }
+  .field-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-2); margin-bottom: 7px; display: block; }
   .field-wrap { position: relative; }
   .field-wrap input {
-    width: 100%;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-size: 14px;
-    font-family: var(--font-mono);
-    padding: 12px 42px 12px 14px;
-    border-radius: var(--radius-control);
-    transition: all 0.15s ease;
+    width: 100%; background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--text); font-size: 14px; font-family: var(--font-mono);
+    padding: 12px 42px 12px 14px; border-radius: var(--radius-control); transition: all 0.15s ease;
   }
   .field-wrap input::placeholder { color: var(--text-3); font-family: var(--font-sans); }
   .field-wrap input:focus { border-color: var(--primary); background: var(--surface-3); outline: none; }
@@ -359,466 +282,460 @@
 
   .field-toggle {
     position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-    width: 30px; height: 30px; border-radius: 6px;
-    border: none; background: transparent; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--text-3);
+    width: 30px; height: 30px; border-radius: 6px; border: none; background: transparent; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; color: var(--text-3);
   }
   .field-toggle:hover { color: var(--text); background: var(--surface-3); }
   .field-toggle svg { width: 16px; height: 16px; }
 
-  .match-check {
-    position: absolute; right: 42px; top: 50%; transform: translateY(-50%);
-    color: var(--success); display: none; align-items: center;
-  }
+  .match-check { position: absolute; right: 42px; top: 50%; transform: translateY(-50%); color: var(--success); display: none; align-items: center; }
   .match-check.show { display: flex; }
   .match-check svg { width: 16px; height: 16px; }
 
   .strength { display: flex; gap: 4px; margin-top: 8px; }
-  .strength i {
-    flex: 1; height: 4px; border-radius: 2px;
-    background: var(--border);
-    transition: background 0.25s ease;
-  }
-  .strength-label {
-    display: flex; justify-content: space-between;
-    margin-top: 6px;
-    font-size: 11.5px; color: var(--text-3);
-  }
+  .strength i { flex: 1; height: 4px; border-radius: 2px; background: var(--border); transition: background 0.25s ease; }
+  .strength-label { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11.5px; color: var(--text-3); }
   .strength-label span.val { color: var(--primary); font-weight: 700; }
 
-  .hint-row {
-    display: flex; align-items: flex-start; gap: 8px;
-    margin-top: 4px;
-    font-size: 12px; color: var(--text-3); line-height: 1.5;
-  }
+  .hint-row { display: flex; align-items: flex-start; gap: 8px; margin-top: 4px; font-size: 12px; color: var(--text-3); line-height: 1.5; }
   .hint-row svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 2px; stroke: var(--primary); }
 
-  .error-msg {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 12.5px; color: var(--error);
-    margin-top: 6px;
-  }
+  .error-msg { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--error); margin-top: 6px; }
   .error-msg svg { width: 15px; height: 15px; flex-shrink: 0; }
 
-  /* ---------- Buttons ---------- */
+  /* Buttons */
   .btn-primary {
-    width: 100%;
-    margin-top: 10px;
-    background: var(--primary);
-    color: #fff;
-    border: none;
-    font-size: 13px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1px;
-    padding: 14px 0;
-    border-radius: var(--radius-pill);
-    cursor: pointer;
-    box-shadow: 0 8px 20px -6px rgba(240, 95, 64, 0.5);
-    transition: all 0.2s ease;
+    width: 100%; margin-top: 10px; background: var(--primary); color: #fff; border: none;
+    font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    padding: 14px 0; border-radius: var(--radius-pill); cursor: pointer;
+    box-shadow: 0 8px 20px -6px rgba(240, 95, 64, 0.5); transition: all 0.2s ease;
   }
-  .btn-primary:hover {
-    background: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 12px 24px -6px rgba(240, 95, 64, 0.65);
-  }
+  .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 12px 24px -6px rgba(240, 95, 64, 0.65); }
   .btn-primary:active { transform: translateY(0); }
-  .btn-primary:disabled {
-    background: var(--surface-3);
-    color: var(--text-3);
-    box-shadow: none;
-    cursor: not-allowed;
-    transform: none;
-  }
+  .btn-primary:disabled { background: var(--surface-3); color: var(--text-3); box-shadow: none; cursor: not-allowed; transform: none; }
 
   .btn-ghost {
-    width: 100%;
-    margin-top: 10px;
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-2);
-    font-size: 13px; font-weight: 600;
-    padding: 12px 0;
-    border-radius: var(--radius-pill);
-    cursor: pointer;
-    transition: all 0.15s ease;
+    width: 100%; margin-top: 10px; background: transparent; border: 1px solid var(--border);
+    color: var(--text-2); font-size: 13px; font-weight: 600; padding: 12px 0;
+    border-radius: var(--radius-pill); cursor: pointer; transition: all 0.15s ease;
   }
   .btn-ghost:hover { background: var(--surface-3); border-color: var(--text-3); color: var(--text); }
 
   .cancel-link {
-    display: block; text-align: center;
-    margin-top: 14px; width: 100%;
-    font-size: 12.5px; color: var(--text-3);
-    background: none; border: none; cursor: pointer;
-    transition: color 0.15s ease;
+    display: block; text-align: center; margin-top: 14px; width: 100%;
+    font-size: 12.5px; color: var(--text-3); background: none; border: none; cursor: pointer; transition: color 0.15s ease;
   }
   .cancel-link:hover { color: var(--error); }
 
-  /* ---------- Progress State ---------- */
+  /* Progress State */
   .progress-block { margin-top: 22px; }
-  .progress-status {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 10px;
-  }
+  .progress-status { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
   .progress-status .label { font-size: 13.5px; font-weight: 600; color: var(--text); }
-  .progress-status .pct {
-    font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--primary);
-  }
-  .progress-track {
-    height: 8px; border-radius: 4px;
-    background: var(--surface-2);
-    border: 1px solid var(--border-soft);
-    overflow: hidden;
-    position: relative;
-  }
-  .progress-fill {
-    height: 100%;
-    width: 0%;
-    border-radius: 4px;
-    background: var(--primary);
-    position: relative;
-    transition: width 0.2s ease;
-  }
+  .progress-status .pct { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--primary); }
+  .progress-track { height: 8px; border-radius: 4px; background: var(--surface-2); border: 1px solid var(--border-soft); overflow: hidden; position: relative; }
+  .progress-fill { height: 100%; width: 0%; border-radius: 4px; background: var(--primary); position: relative; transition: width 0.2s ease; }
   .progress-fill::after {
-    content: "";
-    position: absolute; inset: 0;
+    content: ""; position: absolute; inset: 0;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    width: 60px;
-    animation: sheen 1.3s ease-in-out infinite;
+    width: 60px; animation: sheen 1.3s ease-in-out infinite;
   }
   @keyframes sheen { 0%{ transform: translateX(-80px);} 100%{ transform: translateX(260px);} }
-  .progress-caption {
-    font-size: 12px; color: var(--text-3); margin-top: 12px; text-align: center;
-  }
+  .progress-caption { font-size: 12px; color: var(--text-3); margin-top: 12px; text-align: center; }
 
-  /* ---------- Success / Error Result ---------- */
-  .result {
-    margin-top: 8px;
-    display: flex; flex-direction: column; align-items: center;
-    text-align: center;
-    padding: 10px 4px 4px;
-  }
-  .result-badge {
-    width: 64px; height: 64px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 18px;
-    position: relative;
-  }
+  /* Success / Error Result */
+  .result { margin-top: 8px; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 10px 4px 4px; }
+  .result-badge { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; position: relative; }
   .result-badge.success { background: var(--success-dim); border: 2px solid var(--success); }
   .result-badge.error { background: var(--error-dim); border: 2px solid var(--error); }
   .result-badge svg { width: 28px; height: 28px; }
   .result-badge.success svg { stroke: var(--success); }
   .result-badge.error svg { stroke: var(--error); }
-  .result-badge svg path, .result-badge svg polyline {
-    stroke-dasharray: 40; stroke-dashoffset: 40;
-    animation: draw 0.5s ease forwards 0.1s;
-  }
+  .result-badge svg path, .result-badge svg polyline { stroke-dasharray: 40; stroke-dashoffset: 40; animation: draw 0.5s ease forwards 0.1s; }
   @keyframes draw { to { stroke-dashoffset: 0; } }
 
   .result-title { font-family: var(--font-serif); font-size: 18px; font-weight: 700; color: #fff; }
   .result-sub { font-size: 13.5px; color: var(--text-2); margin-top: 6px; line-height: 1.55; max-width: 340px; }
   .result-sub b { color: var(--primary); font-weight: 600; }
 
-  .meta-row {
-    display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; justify-content: center;
-  }
+  .meta-row { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
   .meta-pill {
-    font-family: var(--font-mono);
-    font-size: 11px; color: var(--text-2);
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    padding: 5px 10px;
-    border-radius: 6px;
-    letter-spacing: .02em;
+    font-family: var(--font-mono); font-size: 11px; color: var(--text-2);
+    background: var(--surface-2); border: 1px solid var(--border); padding: 5px 10px; border-radius: 6px; letter-spacing: .02em;
   }
 
   .result-actions { width: 100%; margin-top: 22px; display: flex; flex-direction: column; gap: 8px; }
 
-  /* ---------- Footer ---------- */
+  /* Window Footer */
   .window-footer {
-    border-top: 1px solid var(--border-soft);
-    padding: 14px 28px;
-    display: flex; align-items: center; justify-content: space-between;
-    background: var(--surface-2);
+    border-top: 1px solid var(--border-soft); padding: 14px 28px;
+    display: flex; align-items: center; justify-content: space-between; background: var(--surface-2);
   }
-  .footer-badge {
-    display: flex; align-items: center; gap: 6px;
-    font-family: var(--font-mono);
-    font-size: 11px; color: var(--text-3);
-  }
+  .footer-badge { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; color: var(--text-3); }
   .footer-badge svg { width: 12px; height: 12px; stroke: var(--text-3); }
   .footer-link { font-size: 12px; color: var(--text-3); text-decoration: none; transition: color 0.15s ease; }
   .footer-link:hover { color: var(--primary); }
 
-  /* ---------- Modal Overlay ---------- */
+  /* Features Grid */
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+  .feature-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card);
+    padding: 32px 24px; transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .feature-card:hover { transform: translateY(-4px); border-color: var(--primary-line); }
+  .feature-icon {
+    width: 48px; height: 48px; border-radius: 12px; background: var(--primary-dim); color: var(--primary);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+  }
+  .feature-icon svg { width: 24px; height: 24px; stroke-width: 2; }
+  .feature-title { font-family: var(--font-serif); font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+  .feature-desc { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+
+  /* Specs Grid */
+  .spec-box {
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-card);
+    padding: 24px; margin-bottom: 16px;
+  }
+  .spec-label { font-family: var(--font-mono); font-size: 12px; color: var(--primary); font-weight: 600; margin-bottom: 6px; }
+  .spec-value { font-size: 15px; color: #fff; font-weight: 600; margin-bottom: 4px; }
+  .spec-detail { font-size: 13px; color: var(--text-2); }
+
+  /* Modal Overlay */
   .modal-overlay {
-    position: fixed; inset: 0; z-index: 1000;
-    background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(4px);
-    display: none; align-items: center; justify-content: center;
-    padding: 20px;
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
   }
   .modal-overlay.active { display: flex; }
   .modal-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-window);
-    width: 480px; max-width: 100%;
-    padding: 28px;
-    box-shadow: var(--shadow-window);
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-window);
+    width: 480px; max-width: 100%; padding: 28px; box-shadow: var(--shadow-window);
   }
   .modal-card h3 { font-family: var(--font-serif); font-size: 18px; color: #fff; margin-bottom: 12px; }
   .modal-card p { font-size: 13px; color: var(--text-2); line-height: 1.6; margin-bottom: 12px; }
   .modal-card ul { font-size: 12.5px; color: var(--text-2); margin-left: 18px; margin-bottom: 20px; line-height: 1.6; }
 
+  /* Footer */
+  footer {
+    padding: 40px 0; border-top: 1px solid var(--border-soft); text-align: center;
+    font-size: 13px; color: var(--text-3); background: var(--bg);
+  }
+
   [data-panel] { display: none; }
   [data-panel].on { display: block; }
 
-  @media (max-width: 480px) {
+  @media (max-width: 768px) {
+    .masthead-title { font-size: 32px; }
+    .nav-links { display: none; }
     .window { width: 100%; border-radius: 16px; }
-    .stage { padding: 16px 12px 40px; }
-    .window-header, .body-copy, .window-footer { padding-left: 18px; padding-right: 18px; }
-    .segmented { margin-left: 18px; margin-right: 18px; }
+    .body-copy { padding: 18px 20px 24px; }
   }
 </style>
 </head>
 <body>
 
-  <!-- Preview State Bar for Testing & Design Review -->
-  <div class="review-bar">
-    <div class="review-inner">
-      <span class="review-label">Preview state:</span>
-      <div class="review-nav" id="stateNav">
-        <button data-goto="empty" class="active">Empty</button>
-        <button data-goto="file">File selected</button>
-        <button data-goto="password">Password</button>
-        <button data-goto="progress">Processing</button>
-        <button data-goto="success">Success</button>
-        <button data-goto="error">Error</button>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="#" class="nav-brand">
+        <div class="nav-brand-icon">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+        </div>
+        Cipher
+      </a>
+      <ul class="nav-links">
+        <li><a href="#encryptor">Encryptor Tool</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#security">Security Specs</a></li>
+        <li><a href="#encryptor" class="btn-nav">Protect File</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="masthead">
+    <div class="container">
+      <h1 class="masthead-title">Client-Side File Encryption,<br>Simple and Secure</h1>
+      <p class="masthead-subtitle">Protect sensitive files with password encryption powered by standard Web Crypto APIs. Runs 100% locally in your browser — zero file uploads, zero server tracking.</p>
+      <a href="#encryptor" class="hero-cta">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+        Launch Encryptor
+      </a>
+    </div>
+  </header>
+
+  <!-- Encryptor App Section -->
+  <section id="encryptor" class="tool-section">
+    <div class="container">
+      <div class="window" id="window">
+
+        <!-- Window Header -->
+        <div class="window-header">
+          <div class="brand">
+            <div class="brand-mark">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+            </div>
+            <span class="brand-name">Cipher</span>
+          </div>
+          <div class="local-pill"><span class="dot"></span>Runs on your device</div>
+        </div>
+
+        <!-- Mode Selector -->
+        <div class="segmented" id="segmented" data-mode="encrypt">
+          <div class="thumb"></div>
+          <button data-mode-btn="encrypt" class="active">Encrypt</button>
+          <button data-mode-btn="decrypt">Decrypt</button>
+        </div>
+
+        <!-- Body Copy & Panels -->
+        <div class="body-copy">
+          <p class="headline" id="headline">Choose a file to protect it with a password only you know.</p>
+
+          <!-- Hidden File Input -->
+          <input type="file" id="fileInput">
+
+          <!-- PANEL: EMPTY (Dropzone) -->
+          <div data-panel="empty" class="on">
+            <div class="dropzone" id="dropzone">
+              <div class="dz-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+              </div>
+              <div class="dz-title">Drop a file here</div>
+              <div class="dz-sub">or <b>click to browse</b> — any file type, any size</div>
+            </div>
+          </div>
+
+          <!-- PANEL: PASSWORD INPUT -->
+          <div data-panel="password">
+            <div class="file-card">
+              <div class="file-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                <span class="file-ext" id="pwFileExtBadge">FILE</span>
+              </div>
+              <div class="file-meta">
+                <div class="file-name" id="pwFileNameText">filename.ext</div>
+                <div class="file-size" id="pwFileSizeText">0 KB</div>
+              </div>
+              <div class="file-actions">
+                <button class="icon-btn" id="pwRemoveFileBtn" title="Remove file">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="pw-section">
+              <div>
+                <label class="field-label">Password</label>
+                <div class="field-wrap">
+                  <input type="password" placeholder="Enter password" id="pwMain">
+                  <button class="field-toggle" data-eye="pwMain" type="button"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                </div>
+                <div class="strength" id="strengthMeter">
+                  <i></i><i></i><i></i><i></i>
+                </div>
+                <div class="strength-label"><span>Password strength</span><span class="val" id="strengthVal">--</span></div>
+              </div>
+
+              <div id="confirmField">
+                <label class="field-label">Confirm password</label>
+                <div class="field-wrap">
+                  <input type="password" placeholder="Re-enter password" id="pwConfirm">
+                  <span class="match-check" id="matchCheck"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                  <button class="field-toggle" data-eye="pwConfirm" type="button" style="right:34px"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                </div>
+              </div>
+
+              <div class="hint-row">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+                <span>This password can't be recovered. If you forget it, the file cannot be decrypted. Store it safely.</span>
+              </div>
+            </div>
+
+            <button class="btn-primary" id="primaryFromPassword">Encrypt file</button>
+          </div>
+
+          <!-- PANEL: PROGRESS -->
+          <div data-panel="progress">
+            <div class="file-card mini dim">
+              <div class="file-icon"><div class="spin-ring"></div></div>
+              <div class="file-meta">
+                <div class="file-name" id="progFileNameText">filename.ext</div>
+                <div class="file-size" id="progressCaptionSmall">Encrypting with AES-256-GCM</div>
+              </div>
+            </div>
+
+            <div class="progress-block">
+              <div class="progress-status">
+                <span class="label" id="progressLabel">Encrypting file…</span>
+                <span class="pct" id="progressPct">0%</span>
+              </div>
+              <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+              <p class="progress-caption">Your file never leaves this device.</p>
+            </div>
+
+            <button class="cancel-link" id="cancelProcessBtn">Cancel</button>
+          </div>
+
+          <!-- PANEL: SUCCESS -->
+          <div data-panel="success">
+            <div class="result">
+              <div class="result-badge success">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="result-title" id="successTitle">File encrypted</div>
+              <div class="result-sub" id="successSub">Saved as <b>filename.ext.cipher</b></div>
+              <div class="meta-row" id="successMetaRow">
+                <span class="meta-pill">AES-256-GCM</span>
+                <span class="meta-pill" id="successMetaSize">0 KB</span>
+                <span class="meta-pill" id="successMetaTime">0.0s</span>
+              </div>
+              <div class="result-actions">
+                <button class="btn-primary" id="successDownloadBtn">Download File</button>
+                <button class="btn-ghost" id="successGhost">Encrypt another file</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL: ERROR -->
+          <div data-panel="error">
+            <div class="file-card dim">
+              <div class="file-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                <span class="file-ext" id="errorExt">FILE</span>
+              </div>
+              <div class="file-meta">
+                <div class="file-name" id="errorFileName">filename.ext</div>
+                <div class="file-size" id="errorFileSize">0 KB</div>
+              </div>
+            </div>
+
+            <div class="pw-section">
+              <div>
+                <label class="field-label">Password</label>
+                <div class="field-wrap error">
+                  <input type="password" id="pwError" placeholder="Enter password">
+                  <button class="field-toggle" data-eye="pwError" type="button"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                </div>
+                <div class="error-msg">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+                  <span id="errorMsg">Incorrect password — authentication failed.</span>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn-primary" id="errorPrimary">Try again</button>
+            <button class="btn-ghost" id="errorGhost">Choose a different file</button>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="window-footer">
+          <div class="footer-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+            AES-256-GCM + PBKDF2
+          </div>
+          <a class="footer-link" href="#" id="howItWorksLink">How it works</a>
+        </div>
+
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="stage">
-    <div class="window" id="window">
-
-      <!-- Window Header -->
-      <div class="window-header">
-        <div class="brand">
-          <div class="brand-mark">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
-          </div>
-          <span class="brand-name">Cipher</span>
-        </div>
-        <div class="local-pill"><span class="dot"></span>Runs on your device</div>
+  <!-- Features Section -->
+  <section id="features" class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Designed for Maximum Privacy</h2>
+        <div class="section-divider"></div>
+        <p class="section-sub">Cipher leverages standard Web Crypto API primitives so you can secure files without trusting third-party cloud servers.</p>
       </div>
 
-      <!-- Mode Selector -->
-      <div class="segmented" id="segmented" data-mode="encrypt">
-        <div class="thumb"></div>
-        <button data-mode-btn="encrypt" class="active">Encrypt</button>
-        <button data-mode-btn="decrypt">Decrypt</button>
+      <div class="grid-3">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 class="feature-title">AES-256-GCM Encryption</h3>
+          <p class="feature-desc">Galois/Counter Mode (GCM) provides authenticated encryption, guaranteeing both high-speed encryption and data integrity checks.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          </div>
+          <h3 class="feature-title">PBKDF2 Key Derivation</h3>
+          <p class="feature-desc">Derives a cryptographic key from your password using SHA-256 with 250,000 iterations and a 16-byte random salt to prevent brute-force attacks.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3 class="feature-title">100% Client-Side Executable</h3>
+          <p class="feature-desc">All binary processing takes place in your browser memory. Your files, passwords, and decrypted outputs never cross a network interface.</p>
+        </div>
       </div>
-
-      <!-- Body Copy & Panels -->
-      <div class="body-copy">
-        <p class="headline" id="headline">Choose a file to protect it with a password only you know.</p>
-
-        <!-- Hidden File Input -->
-        <input type="file" id="fileInput">
-
-        <!-- PANEL: EMPTY (Dropzone) -->
-        <div data-panel="empty" class="on">
-          <div class="dropzone" id="dropzone">
-            <div class="dz-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-            </div>
-            <div class="dz-title">Drop a file here</div>
-            <div class="dz-sub">or <b>click to browse</b> — any file type, any size</div>
-          </div>
-        </div>
-
-        <!-- PANEL: FILE SELECTED (Initial state before entering password) -->
-        <div data-panel="file">
-          <div class="file-card">
-            <div class="file-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-              <span class="file-ext" id="fileExtBadge">FILE</span>
-            </div>
-            <div class="file-meta">
-              <div class="file-name" id="fileNameText">filename.ext</div>
-              <div class="file-size" id="fileSizeText">0 KB</div>
-            </div>
-            <div class="file-actions">
-              <button class="icon-btn" id="removeFileBtn" title="Remove file">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="pw-section">
-            <div>
-              <label class="field-label">Password</label>
-              <div class="field-wrap">
-                <input type="password" placeholder="Enter a password" disabled>
-                <button class="field-toggle" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn-primary" disabled id="btnDisabledInitial">Encrypt file</button>
-        </div>
-
-        <!-- PANEL: PASSWORD INPUT -->
-        <div data-panel="password">
-          <div class="file-card">
-            <div class="file-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-              <span class="file-ext" id="pwFileExtBadge">FILE</span>
-            </div>
-            <div class="file-meta">
-              <div class="file-name" id="pwFileNameText">filename.ext</div>
-              <div class="file-size" id="pwFileSizeText">0 KB</div>
-            </div>
-            <div class="file-actions">
-              <button class="icon-btn" id="pwRemoveFileBtn" title="Remove file">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="pw-section">
-            <div>
-              <label class="field-label">Password</label>
-              <div class="field-wrap">
-                <input type="password" placeholder="Enter password" id="pwMain">
-                <button class="field-toggle" data-eye="pwMain" type="button"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
-              </div>
-              <div class="strength" id="strengthMeter">
-                <i></i><i></i><i></i><i></i>
-              </div>
-              <div class="strength-label"><span>Password strength</span><span class="val" id="strengthVal">--</span></div>
-            </div>
-
-            <div id="confirmField">
-              <label class="field-label">Confirm password</label>
-              <div class="field-wrap">
-                <input type="password" placeholder="Re-enter password" id="pwConfirm">
-                <span class="match-check" id="matchCheck"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-                <button class="field-toggle" data-eye="pwConfirm" type="button" style="right:34px"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
-              </div>
-            </div>
-
-            <div class="hint-row">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
-              <span>This password can't be recovered. If you forget it, the file cannot be decrypted. Store it safely.</span>
-            </div>
-          </div>
-
-          <button class="btn-primary" id="primaryFromPassword">Encrypt file</button>
-        </div>
-
-        <!-- PANEL: PROGRESS -->
-        <div data-panel="progress">
-          <div class="file-card mini dim">
-            <div class="file-icon"><div class="spin-ring"></div></div>
-            <div class="file-meta">
-              <div class="file-name" id="progFileNameText">filename.ext</div>
-              <div class="file-size" id="progressCaptionSmall">Encrypting with AES-256-GCM</div>
-            </div>
-          </div>
-
-          <div class="progress-block">
-            <div class="progress-status">
-              <span class="label" id="progressLabel">Encrypting file…</span>
-              <span class="pct" id="progressPct">0%</span>
-            </div>
-            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-            <p class="progress-caption">Your file never leaves this device.</p>
-          </div>
-
-          <button class="cancel-link" id="cancelProcessBtn">Cancel</button>
-        </div>
-
-        <!-- PANEL: SUCCESS -->
-        <div data-panel="success">
-          <div class="result">
-            <div class="result-badge success">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            </div>
-            <div class="result-title" id="successTitle">File encrypted</div>
-            <div class="result-sub" id="successSub">Saved as <b>filename.cipher</b></div>
-            <div class="meta-row" id="successMetaRow">
-              <span class="meta-pill">AES-256-GCM</span>
-              <span class="meta-pill" id="successMetaSize">0 KB</span>
-              <span class="meta-pill" id="successMetaTime">0.0s</span>
-            </div>
-            <div class="result-actions">
-              <button class="btn-primary" id="successDownloadBtn">Download File</button>
-              <button class="btn-ghost" id="successGhost">Encrypt another file</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- PANEL: ERROR -->
-        <div data-panel="error">
-          <div class="file-card dim">
-            <div class="file-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
-              <span class="file-ext" id="errorExt">FILE</span>
-            </div>
-            <div class="file-meta">
-              <div class="file-name" id="errorFileName">filename.ext</div>
-              <div class="file-size" id="errorFileSize">0 KB</div>
-            </div>
-          </div>
-
-          <div class="pw-section">
-            <div>
-              <label class="field-label">Password</label>
-              <div class="field-wrap error">
-                <input type="password" id="pwError" placeholder="Enter password">
-                <button class="field-toggle" data-eye="pwError" type="button"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
-              </div>
-              <div class="error-msg">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
-                <span id="errorMsg">Incorrect password — this doesn't match the file.</span>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn-primary" id="errorPrimary">Try again</button>
-          <button class="btn-ghost" id="errorGhost">Choose a different file</button>
-        </div>
-
-      </div>
-
-      <!-- Footer -->
-      <div class="window-footer">
-        <div class="footer-badge">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
-          AES-256-GCM + PBKDF2
-        </div>
-        <a class="footer-link" href="#" id="howItWorksLink">How it works</a>
-      </div>
-
     </div>
-  </div>
+  </section>
+
+  <!-- Security Specs Section -->
+  <section id="security" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Cryptographic Container Spec</h2>
+        <div class="section-divider"></div>
+        <p class="section-sub">Cipher packs your encrypted data into a structured binary container format (`.cipher`).</p>
+      </div>
+
+      <div style="max-width: 800px; margin: 0 auto;">
+        <div class="spec-box">
+          <div class="spec-label">MAGIC HEADER (4 BYTES)</div>
+          <div class="spec-value">ASCII "CPHR" (0x43 0x50 0x48 0x52)</div>
+          <div class="spec-detail">Validates container format and prevents processing incompatible files.</div>
+        </div>
+
+        <div class="spec-box">
+          <div class="spec-label">VERSION & RANDOM SALT (17 BYTES)</div>
+          <div class="spec-value">1-byte Version (0x01) + 16-byte Random Salt</div>
+          <div class="spec-detail">Salt generated via crypto.getRandomValues() for PBKDF2 key derivation.</div>
+        </div>
+
+        <div class="spec-box">
+          <div class="spec-label">INITIALIZATION VECTOR (12 BYTES)</div>
+          <div class="spec-value">96-bit Cryptographically Random IV</div>
+          <div class="spec-detail">Ensures unique AES-GCM ciphertext generation per encryption pass.</div>
+        </div>
+
+        <div class="spec-box">
+          <div class="spec-label">METADATA & PAYLOAD</div>
+          <div class="spec-value">2-byte Big-Endian Length + Original UTF-8 Filename + AES-256-GCM Ciphertext</div>
+          <div class="spec-detail">Preserves exact original filename for seamless restoration upon decryption.</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- How It Works Modal -->
   <div class="modal-overlay" id="howItWorksModal">
     <div class="modal-card">
       <h3>How Cipher Encryption Works</h3>
-      <p>Cipher is a 100% client-side file encryption tool that runs directly in your browser using the standard Web Crypto API.</p>
+      <p>Cipher is a 100% client-side file encryption tool that runs directly in your browser using standard Web Crypto API primitives.</p>
       <ul>
-        <li><b>Key Derivation:</b> PBKDF2 with SHA-256 algorithm and 250,000 iterations for strong password hashing.</li>
+        <li><b>Key Derivation:</b> PBKDF2 with SHA-256 algorithm and 250,000 iterations.</li>
         <li><b>Cipher:</b> AES-256-GCM authenticated encryption ensuring confidentiality and data integrity.</li>
         <li><b>Zero Server Uploads:</b> Your files and passwords never leave your computer.</li>
-        <li><b>Binary Specification:</b> `.cipher` format contains a 4-byte header (`CPHR`), 1-byte version, 16-byte random salt, 12-byte random IV, preserved UTF-8 filename, and encrypted payload.</li>
+        <li><b>Binary Container:</b> Encrypted files output as `.cipher` files with preserved metadata.</li>
       </ul>
       <button class="btn-primary" id="closeModalBtn">Got it</button>
     </div>
   </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; Cipher File Encryptor — Secure, Client-Side Encryption Powered by Web Crypto API.</p>
+    </div>
+  </footer>
 
 <script>
   // Application State
@@ -830,7 +747,6 @@
   let isCancelled = false;
 
   // DOM Elements
-  const navButtons = document.querySelectorAll('#stateNav button');
   const panels = document.querySelectorAll('[data-panel]');
   const headline = document.getElementById('headline');
   const segmented = document.getElementById('segmented');
@@ -843,7 +759,6 @@
   const matchCheck = document.getElementById('matchCheck');
 
   const primaryFromPassword = document.getElementById('primaryFromPassword');
-  const btnDisabledInitial = document.getElementById('btnDisabledInitial');
   const successDownloadBtn = document.getElementById('successDownloadBtn');
   const successGhost = document.getElementById('successGhost');
   const errorPrimary = document.getElementById('errorPrimary');
@@ -854,19 +769,17 @@
   const howItWorksLink = document.getElementById('howItWorksLink');
   const closeModalBtn = document.getElementById('closeModalBtn');
 
-  // Text strings for Encrypt vs Decrypt modes
+  // Mode Copy Mapping
   const copy = {
     encrypt: {
       empty: "Choose a file to protect it with a password only you know.",
-      file: "Set a password to encrypt this file.",
       password: "Choose a strong password — you'll need it to unlock this file later.",
       progress: "Sit tight, this only takes a moment.",
       success: "",
-      error: "Something interrupted the process."
+      error: "Encryption interrupted or failed."
     },
     decrypt: {
       empty: "Choose an encrypted .cipher file to unlock it.",
-      file: "Enter the password used to encrypt this file.",
       password: "Enter the password used to encrypt this file.",
       progress: "Sit tight, this only takes a moment.",
       success: "",
@@ -874,7 +787,7 @@
     }
   };
 
-  // Helper: Format bytes
+  // Helper: Format Bytes
   function formatBytes(bytes) {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -883,7 +796,7 @@
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   }
 
-  // Helper: Extract File Extension
+  // Helper: Extract Extension
   function getFileExt(filename) {
     if (!filename) return 'FILE';
     const parts = filename.split('.');
@@ -897,7 +810,6 @@
   // Mode Switcher
   function applyModeCopy() {
     primaryFromPassword.textContent = mode === 'encrypt' ? 'Encrypt file' : 'Decrypt file';
-    btnDisabledInitial.textContent = mode === 'encrypt' ? 'Encrypt file' : 'Decrypt file';
     document.getElementById('progressLabel').textContent = mode === 'encrypt' ? 'Encrypting file…' : 'Decrypting file…';
     document.getElementById('progressCaptionSmall').textContent = mode === 'encrypt' ? 'Encrypting with AES-256-GCM' : 'Verifying & decrypting with AES-256-GCM';
     document.getElementById('confirmField').style.display = mode === 'encrypt' ? 'block' : 'none';
@@ -922,31 +834,13 @@
     });
   });
 
-  // Panel Navigator
+  // Panel Navigation
   function goTo(state) {
     currentPanel = state;
     panels.forEach(p => p.classList.toggle('on', p.dataset.panel === state));
-    navButtons.forEach(b => b.classList.toggle('active', b.dataset.goto === state));
     headline.textContent = copy[mode][state] || '';
     headline.style.display = (state === 'success') ? 'none' : 'block';
   }
-
-  navButtons.forEach(b => {
-    b.addEventListener('click', () => {
-      if (b.dataset.goto === 'file' || b.dataset.goto === 'password') {
-        if (!selectedFile) {
-          // Mock file for demo state navigation
-          const dummyContent = new TextEncoder().encode("Sample demo file content for Cipher encryption preview.");
-          updateFileInfo({
-            name: mode === 'encrypt' ? 'Quarterly-Report.pdf' : 'Quarterly-Report.pdf.cipher',
-            size: dummyContent.byteLength,
-            arrayBuffer: async () => dummyContent.buffer
-          });
-        }
-      }
-      goTo(b.dataset.goto);
-    });
-  });
 
   // Password Strength Calculation
   function checkPasswordStrength(pw) {
@@ -977,7 +871,7 @@
     document.getElementById('strengthVal').textContent = pw ? text : '--';
   }
 
-  // Password Inputs Validation
+  // Form Validation
   function validateForm() {
     const pw = pwMain.value;
     const confirm = pwConfirm.value;
@@ -1000,15 +894,11 @@
   pwMain.addEventListener('input', validateForm);
   pwConfirm.addEventListener('input', validateForm);
 
-  // File Handling Logic
+  // File Selection Logic
   function updateFileInfo(file) {
     selectedFile = file;
     const sizeStr = formatBytes(file.size);
     const ext = getFileExt(file.name);
-
-    document.getElementById('fileNameText').textContent = file.name;
-    document.getElementById('fileSizeText').textContent = sizeStr;
-    document.getElementById('fileExtBadge').textContent = ext;
 
     document.getElementById('pwFileNameText').textContent = file.name;
     document.getElementById('pwFileSizeText').textContent = sizeStr;
@@ -1035,7 +925,6 @@
     goTo('empty');
   }
 
-  // Dropzone & File Input Events
   dropzone.addEventListener('click', () => fileInput.click());
   fileInput.addEventListener('change', (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -1063,10 +952,9 @@
     }
   });
 
-  document.getElementById('removeFileBtn').addEventListener('click', resetFileSelection);
   document.getElementById('pwRemoveFileBtn').addEventListener('click', resetFileSelection);
 
-  // Eye Toggle for Passwords
+  // Eye Toggle
   document.querySelectorAll('[data-eye]').forEach(btn => {
     btn.addEventListener('click', () => {
       const input = document.getElementById(btn.dataset.eye);
@@ -1074,7 +962,7 @@
     });
   });
 
-  // Modal Handling
+  // Modal Control
   howItWorksLink.addEventListener('click', (e) => {
     e.preventDefault();
     modal.classList.add('active');
@@ -1084,7 +972,6 @@
     if (e.target === modal) modal.classList.remove('active');
   });
 
-  // Progress Bar Controller
   function updateProgress(pct, caption) {
     document.getElementById('progressFill').style.width = pct + '%';
     document.getElementById('progressPct').textContent = Math.round(pct) + '%';
@@ -1093,7 +980,7 @@
     }
   }
 
-  // WEB CRYPTO API ENGINE (AES-256-GCM + PBKDF2)
+  // Web Crypto API Key Derivation
   async function deriveKey(password, salt) {
     const enc = new TextEncoder();
     const pwKey = await crypto.subtle.importKey(
@@ -1127,7 +1014,7 @@
     const arrayBuffer = await file.arrayBuffer();
 
     if (isCancelled) return;
-    updateProgress(30, 'Deriving secure key (PBKDF2)…');
+    updateProgress(30, 'Deriving key (250,000 SHA-256 PBKDF2 iterations)…');
 
     const enc = new TextEncoder();
     const salt = crypto.getRandomValues(new Uint8Array(16));
@@ -1153,20 +1040,20 @@
 
     const outBuffer = new Uint8Array(totalLen);
 
-    // 1. Magic bytes "CPHR" (0x43, 0x50, 0x48, 0x52)
+    // Header CPHR
     outBuffer.set([0x43, 0x50, 0x48, 0x52], 0);
-    // 2. Version byte (1)
+    // Version 1
     outBuffer[4] = 1;
-    // 3. Salt (16 bytes)
+    // Salt (16B)
     outBuffer.set(salt, 5);
-    // 4. IV (12 bytes)
+    // IV (12B)
     outBuffer.set(iv, 21);
-    // 5. Filename length (2 bytes, big-endian)
+    // Filename length
     const view = new DataView(outBuffer.buffer);
     view.setUint16(33, filenameBytes.length, false);
-    // 6. Filename bytes
+    // Filename bytes
     outBuffer.set(filenameBytes, 35);
-    // 7. Encrypted payload
+    // Payload
     outBuffer.set(new Uint8Array(ciphertext), headerLen);
 
     const endTime = performance.now();
@@ -1267,7 +1154,6 @@
     goTo('error');
   }
 
-  // Process Action Trigger
   primaryFromPassword.addEventListener('click', () => {
     const pw = pwMain.value;
     if (!selectedFile || !pw) return;
@@ -1279,13 +1165,11 @@
     }
   });
 
-  // Cancel Handler
   cancelProcessBtn.addEventListener('click', () => {
     isCancelled = true;
     goTo('password');
   });
 
-  // Download Trigger
   successDownloadBtn.addEventListener('click', () => {
     if (!resultBlob || !resultDownloadName) return;
     const url = URL.createObjectURL(resultBlob);
@@ -1298,7 +1182,6 @@
     URL.revokeObjectURL(url);
   });
 
-  // Success & Error Navigation Actions
   successGhost.addEventListener('click', resetFileSelection);
   errorGhost.addEventListener('click', resetFileSelection);
   errorPrimary.addEventListener('click', () => {
@@ -1308,7 +1191,6 @@
     goTo('password');
   });
 
-  // Initialize Default Copy & View
   applyModeCopy();
   goTo('empty');
 </script>
