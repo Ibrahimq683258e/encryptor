@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cipher — File Encryptor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0c11;
+    --bg-2:#0d0f16;
+    --surface:#12141b;
+    --surface-2:#171a23;
+    --surface-3:#1c1f29;
+    --border:#242833;
+    --border-soft:#1b1e27;
+    --text:#eceef1;
+    --text-2:#9096a5;
+    --text-3:#565c6b;
+    --accent:#cea25e;
+    --accent-bright:#e6c284;
+    --accent-dim:rgba(206,162,94,0.13);
+    --accent-line:rgba(206,162,94,0.35);
+    --success:#7fd9a8;
+    --success-dim:rgba(127,217,168,0.12);
+    --error:#e2717a;
+    --error-dim:rgba(226,113,122,0.12);
+    --radius-window:22px;
+    --radius-control:11px;
+    --radius-sm:7px;
+    --shadow-window: 0 40px 80px -30px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.02) inset;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Manrope', -apple-system, sans-serif;
+    background:
+      radial-gradient(700px 500px at 50% 18%, rgba(206,162,94,0.07), transparent 60%),
+      radial-gradient(900px 700px at 82% 88%, rgba(59,73,120,0.10), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--accent-dim); color:var(--accent-bright); }
+  button{ font-family:inherit; }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:6px; }
+
+  /* ---------- presentation nav (design-review aid, not product chrome) ---------- */
+  .review-bar{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    padding:22px 20px 8px;
+  }
+  .review-inner{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .review-label{
+    font-size:11px;
+    color:var(--text-3);
+    letter-spacing:.02em;
+    margin-right:2px;
+  }
+  .review-nav{
+    display:flex;
+    gap:4px;
+    background:var(--surface);
+    border:1px solid var(--border-soft);
+    padding:4px;
+    border-radius:12px;
+  }
+  .review-nav button{
+    background:transparent;
+    border:none;
+    color:var(--text-2);
+    font-size:12.5px;
+    padding:7px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .review-nav button:hover{ color:var(--text); background:var(--surface-3); }
+  .review-nav button.active{ color:#0a0c11; background:var(--accent); font-weight:600; }
+
+  /* ---------- stage ---------- */
+  .stage{
+    flex:1;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 20px 70px;
+  }
+
+  .window{
+    width:436px;
+    max-width:100%;
+    background:linear-gradient(180deg, var(--surface) 0%, var(--surface) 100%);
+    border:1px solid var(--border);
+    border-radius:var(--radius-window);
+    box-shadow:var(--shadow-window);
+    overflow:hidden;
+    position:relative;
+  }
+  .window::before{
+    content:"";
+    position:absolute; inset:0 0 auto 0; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
+  }
+
+  .window-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:22px 24px 0;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:9px;
+  }
+  .brand-mark{
+    width:26px; height:26px;
+    border-radius:8px;
+    background:linear-gradient(155deg, var(--accent-bright), var(--accent) 65%);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 14px -4px rgba(206,162,94,0.55);
+  }
+  .brand-mark svg{ width:14px; height:14px; }
+  .brand-name{ font-size:15px; font-weight:700; letter-spacing:-0.01em; }
+
+  .local-pill{
+    display:flex; align-items:center; gap:6px;
+    font-size:11px; color:var(--text-3);
+  }
+  .local-pill .dot{
+    width:6px; height:6px; border-radius:50%;
+    background:var(--success);
+    box-shadow:0 0 0 3px var(--success-dim);
+  }
+
+  /* mode segmented control */
+  .segmented{
+    margin:20px 24px 0;
+    display:flex;
+    background:var(--surface-2);
+    border:1px solid var(--border-soft);
+    border-radius:var(--radius-control);
+    padding:3px;
+    position:relative;
+  }
+  .segmented button{
+    flex:1;
+    position:relative;
+    z-index:2;
+    background:transparent;
+    border:none;
+    color:var(--text-2);
+    font-size:13px;
+    font-weight:600;
+    padding:9px 0;
+    border-radius:8px;
+    cursor:pointer;
+    transition:color .2s ease;
+  }
+  .segmented button.active{ color:#0a0c11; }
+  .segmented .thumb{
+    position:absolute;
+    top:3px; bottom:3px; left:3px;
+    width:calc(50% - 3px);
+    background:linear-gradient(155deg, var(--accent-bright), var(--accent));
+    border-radius:8px;
+    transition:transform .28s cubic-bezier(.65,.05,.36,1);
+    z-index:1;
+  }
+  .segmented[data-mode="decrypt"] .thumb{ transform:translateX(100%); }
+
+  .body-copy{
+    padding:16px 24px 24px;
+  }
+  .headline{
+    font-size:14.5px;
+    color:var(--text-2);
+    line-height:1.5;
+    margin-top:2px;
+  }
+
+  /* ---------- dropzone ---------- */
+  .dropzone{
+    margin-top:16px;
+    border-radius:16px;
+    border:1.5px dashed #2c313f;
+    background:
+      repeating-linear-gradient(-45deg, rgba(255,255,255,0.012) 0 12px, transparent 12px 24px),
+      var(--surface-2);
+    padding:44px 20px;
+    text-align:center;
+    cursor:pointer;
+    transition:border-color .2s ease, background .2s ease, transform .2s ease;
+  }
+  .dropzone:hover{ border-color:#3a3f4e; }
+  .dropzone.drag{
+    border-color:var(--accent-line);
+    background:
+      repeating-linear-gradient(-45deg, rgba(255,255,255,0.012) 0 12px, transparent 12px 24px),
+      var(--accent-dim);
+    transform:scale(1.012);
+  }
+  .dz-icon{
+    width:46px; height:46px;
+    margin:0 auto 16px;
+    border-radius:13px;
+    background:var(--surface-3);
+    border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .2s ease, border-color .2s ease;
+  }
+  .dropzone:hover .dz-icon{ transform:translateY(-2px); }
+  .dropzone.drag .dz-icon{ border-color:var(--accent-line); transform:translateY(-3px) scale(1.05); }
+  .dz-icon svg{ width:20px; height:20px; stroke:var(--text-2); }
+  .dropzone.drag .dz-icon svg{ stroke:var(--accent-bright); }
+  .dz-title{ font-size:14.5px; font-weight:600; margin-bottom:5px; }
+  .dz-sub{ font-size:12.5px; color:var(--text-3); }
+  .dz-sub b{ color:var(--text-2); font-weight:500; text-decoration:underline; text-underline-offset:2px; text-decoration-color:var(--border); }
+
+  /* ---------- file card ---------- */
+  .file-card{
+    margin-top:16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:14px 14px;
+    transition:border-color .2s ease, opacity .2s ease, padding .25s ease;
+  }
+  .file-card:hover{ border-color:#333949; }
+  .file-icon{
+    width:38px; height:38px;
+    border-radius:9px;
+    background:var(--surface-3);
+    border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    position:relative;
+  }
+  .file-icon svg{ width:16px; height:16px; stroke:var(--text-2); }
+  .file-ext{
+    position:absolute; bottom:-5px; right:-6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:8.5px; font-weight:600;
+    background:var(--surface-3);
+    border:1px solid var(--border);
+    color:var(--text-2);
+    padding:1px 4px;
+    border-radius:4px;
+    letter-spacing:.02em;
+  }
+  .file-meta{ flex:1; min-width:0; }
+  .file-name{
+    font-size:13.5px; font-weight:600;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .file-size{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; color:var(--text-3); margin-top:2px;
+  }
+  .file-actions{ display:flex; align-items:center; gap:2px; flex-shrink:0; }
+  .icon-btn{
+    width:28px; height:28px;
+    border-radius:8px;
+    border:none; background:transparent;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    color:var(--text-3);
+    transition:background .15s ease, color .15s ease;
+  }
+  .icon-btn:hover{ background:var(--surface-3); color:var(--text); }
+  .icon-btn svg{ width:14px; height:14px; }
+
+  .file-card.mini{ padding:11px 12px; }
+  .file-card.mini .file-icon{ width:32px; height:32px; }
+  .file-card.mini .file-actions{ display:none; }
+  .file-card.dim{ opacity:.55; }
+
+  .spin-ring{
+    width:16px; height:16px;
+    border-radius:50%;
+    border:2px solid var(--border);
+    border-top-color:var(--accent);
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  /* ---------- password section ---------- */
+  .pw-section{ margin-top:18px; display:flex; flex-direction:column; gap:12px; }
+  .field-label{
+    font-size:12px; color:var(--text-2); font-weight:600;
+    margin-bottom:7px; display:block;
+  }
+  .field-wrap{ position:relative; }
+  .field-wrap input{
+    width:100%;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    color:var(--text);
+    font-size:14px;
+    font-family:'IBM Plex Mono', monospace;
+    padding:12px 40px 12px 13px;
+    border-radius:var(--radius-control);
+    transition:border-color .15s ease, background .15s ease;
+    letter-spacing:.02em;
+  }
+  .field-wrap input::placeholder{ color:var(--text-3); font-family:'Manrope', sans-serif; letter-spacing:0; }
+  .field-wrap input:focus{ border-color:var(--accent-line); background:var(--surface-3); outline:none; }
+  .field-wrap.error input{ border-color:rgba(226,113,122,0.55); background:rgba(226,113,122,0.05); }
+  .field-toggle{
+    position:absolute; right:6px; top:50%; transform:translateY(-50%);
+    width:28px; height:28px; border-radius:7px;
+    border:none; background:transparent; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--text-3);
+  }
+  .field-toggle:hover{ color:var(--text-2); background:var(--surface-3); }
+  .field-toggle svg{ width:15px; height:15px; }
+
+  .match-check{
+    position:absolute; right:38px; top:50%; transform:translateY(-50%);
+    color:var(--success); display:flex;
+  }
+  .match-check svg{ width:14px; height:14px; }
+
+  .strength{ display:flex; gap:4px; margin-top:9px; }
+  .strength i{
+    flex:1; height:3px; border-radius:2px;
+    background:var(--border);
+    transition:background .25s ease;
+  }
+  .strength-label{
+    display:flex; justify-content:space-between;
+    margin-top:7px;
+    font-size:11px; color:var(--text-3);
+  }
+  .strength-label span.val{ color:var(--accent-bright); font-weight:600; }
+
+  .hint-row{
+    display:flex; align-items:flex-start; gap:7px;
+    margin-top:2px;
+    font-size:11.5px; color:var(--text-3); line-height:1.5;
+  }
+  .hint-row svg{ width:13px; height:13px; flex-shrink:0; margin-top:2px; stroke:var(--text-3); }
+
+  .error-msg{
+    display:flex; align-items:center; gap:6px;
+    font-size:12px; color:var(--error);
+    margin-top:2px;
+  }
+  .error-msg svg{ width:13px; height:13px; }
+
+  /* ---------- buttons ---------- */
+  .btn-primary{
+    width:100%;
+    margin-top:6px;
+    background:linear-gradient(155deg, var(--accent-bright), var(--accent));
+    color:#100c04;
+    border:none;
+    font-size:14px; font-weight:700;
+    padding:13px 0;
+    border-radius:var(--radius-control);
+    cursor:pointer;
+    box-shadow:0 10px 26px -10px rgba(206,162,94,0.55);
+    transition:transform .15s ease, box-shadow .15s ease, filter .15s ease, opacity .15s ease;
+  }
+  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 14px 30px -10px rgba(206,162,94,0.65); filter:brightness(1.04); }
+  .btn-primary:active{ transform:translateY(0); }
+  .btn-primary:disabled{
+    background:var(--surface-3);
+    color:var(--text-3);
+    box-shadow:none;
+    cursor:not-allowed;
+    transform:none;
+  }
+  .btn-ghost{
+    width:100%;
+    margin-top:9px;
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--text-2);
+    font-size:13.5px; font-weight:600;
+    padding:11px 0;
+    border-radius:var(--radius-control);
+    cursor:pointer;
+    transition:background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .btn-ghost:hover{ background:var(--surface-3); border-color:#333949; color:var(--text); }
+
+  .cancel-link{
+    display:block; text-align:center;
+    margin-top:14px;
+    font-size:12px; color:var(--text-3);
+    background:none; border:none; cursor:pointer;
+  }
+  .cancel-link:hover{ color:var(--text-2); }
+
+  /* ---------- progress state ---------- */
+  .progress-block{ margin-top:20px; }
+  .progress-status{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:9px;
+  }
+  .progress-status .label{ font-size:13px; font-weight:600; }
+  .progress-status .pct{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--accent-bright);
+  }
+  .progress-track{
+    height:6px; border-radius:4px;
+    background:var(--surface-2);
+    border:1px solid var(--border-soft);
+    overflow:hidden;
+    position:relative;
+  }
+  .progress-fill{
+    height:100%;
+    width:38%;
+    border-radius:4px;
+    background:linear-gradient(90deg, var(--accent), var(--accent-bright));
+    position:relative;
+    transition:width .4s ease;
+  }
+  .progress-fill::after{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+    width:60px;
+    animation:sheen 1.3s ease-in-out infinite;
+  }
+  @keyframes sheen{ 0%{ transform:translateX(-80px);} 100%{ transform:translateX(220px);} }
+  .progress-caption{
+    font-size:12px; color:var(--text-3); margin-top:10px;
+  }
+
+  /* ---------- success / error result ---------- */
+  .result{
+    margin-top:8px;
+    display:flex; flex-direction:column; align-items:center;
+    text-align:center;
+    padding:10px 4px 4px;
+  }
+  .result-badge{
+    width:60px; height:60px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:18px;
+    position:relative;
+  }
+  .result-badge.success{ background:var(--success-dim); }
+  .result-badge.error{ background:var(--error-dim); }
+  .result-badge svg{ width:26px; height:26px; }
+  .result-badge.success svg{ stroke:var(--success); }
+  .result-badge.error svg{ stroke:var(--error); }
+  .result-badge svg path, .result-badge svg polyline{
+    stroke-dasharray:40; stroke-dashoffset:40;
+    animation:draw .5s ease forwards .1s;
+  }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+
+  .result-title{ font-size:17px; font-weight:700; letter-spacing:-0.01em; }
+  .result-sub{ font-size:13px; color:var(--text-2); margin-top:6px; line-height:1.55; max-width:300px; }
+  .result-sub b{ color:var(--text); font-weight:600; }
+
+  .meta-row{
+    display:flex; gap:8px; margin-top:18px; flex-wrap:wrap; justify-content:center;
+  }
+  .meta-pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px; color:var(--text-2);
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    padding:5px 9px;
+    border-radius:6px;
+    letter-spacing:.02em;
+  }
+
+  .result .btn-primary, .result .btn-ghost{ margin-top:0; }
+  .result-actions{ width:100%; margin-top:22px; display:flex; flex-direction:column; }
+
+  .window-footer{
+    border-top:1px solid var(--border-soft);
+    padding:13px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .footer-badge{
+    display:flex; align-items:center; gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px; color:var(--text-3);
+  }
+  .footer-badge svg{ width:11px; height:11px; stroke:var(--text-3); }
+  .footer-link{ font-size:11.5px; color:var(--text-3); text-decoration:none; }
+  .footer-link:hover{ color:var(--text-2); }
+
+  [data-panel]{ display:none; }
+  [data-panel].on{ display:block; }
+
+  @media (max-width:480px){
+    .window{ width:100%; border-radius:18px; }
+    .stage{ padding:20px 14px 50px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="review-bar">
+    <div class="review-inner">
+      <span class="review-label">Preview state</span>
+      <div class="review-nav" id="stateNav">
+        <button data-goto="empty" class="active">Empty</button>
+        <button data-goto="file">File selected</button>
+        <button data-goto="password">Password</button>
+        <button data-goto="progress">Encrypting</button>
+        <button data-goto="success">Success</button>
+        <button data-goto="error">Error</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="window" id="window">
+
+      <div class="window-header">
+        <div class="brand">
+          <div class="brand-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#100c04" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+          </div>
+          <span class="brand-name">Cipher</span>
+        </div>
+        <div class="local-pill"><span class="dot"></span>Runs on your device</div>
+      </div>
+
+      <div class="segmented" id="segmented" data-mode="encrypt">
+        <div class="thumb"></div>
+        <button data-mode-btn="encrypt" class="active">Encrypt</button>
+        <button data-mode-btn="decrypt">Decrypt</button>
+      </div>
+
+      <div class="body-copy">
+        <p class="headline" id="headline">Choose a file to protect it with a password only you know.</p>
+
+        <!-- EMPTY: dropzone -->
+        <div data-panel="empty" class="on">
+          <div class="dropzone" id="dropzone">
+            <div class="dz-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+            </div>
+            <div class="dz-title">Drop a file here</div>
+            <div class="dz-sub">or <b>click to browse</b> — any file type, any size</div>
+          </div>
+        </div>
+
+        <!-- FILE SELECTED -->
+        <div data-panel="file">
+          <div class="file-card">
+            <div class="file-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              <span class="file-ext">PDF</span>
+            </div>
+            <div class="file-meta">
+              <div class="file-name">Quarterly-Report.pdf</div>
+              <div class="file-size">2.4 MB</div>
+            </div>
+            <div class="file-actions">
+              <button class="icon-btn" title="Remove file">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="pw-section">
+            <div>
+              <label class="field-label">Password</label>
+              <div class="field-wrap">
+                <input type="password" placeholder="Enter a password" disabled>
+                <button class="field-toggle" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-primary" disabled>Encrypt file</button>
+        </div>
+
+        <!-- PASSWORD -->
+        <div data-panel="password">
+          <div class="file-card">
+            <div class="file-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              <span class="file-ext">PDF</span>
+            </div>
+            <div class="file-meta">
+              <div class="file-name">Quarterly-Report.pdf</div>
+              <div class="file-size">2.4 MB</div>
+            </div>
+            <div class="file-actions">
+              <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+            </div>
+          </div>
+
+          <div class="pw-section">
+            <div>
+              <label class="field-label">Password</label>
+              <div class="field-wrap">
+                <input type="password" value="CorrectHorse93!" id="pwMain">
+                <button class="field-toggle" data-eye="pwMain"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              </div>
+              <div class="strength">
+                <i style="background:var(--accent)"></i>
+                <i style="background:var(--accent)"></i>
+                <i style="background:var(--accent)"></i>
+                <i style="background:var(--border)"></i>
+              </div>
+              <div class="strength-label"><span>Password strength</span><span class="val">Strong</span></div>
+            </div>
+
+            <div id="confirmField">
+              <label class="field-label">Confirm password</label>
+              <div class="field-wrap">
+                <input type="password" value="CorrectHorse93!" id="pwConfirm">
+                <span class="match-check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                <button class="field-toggle" data-eye="pwConfirm" style="right:34px"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              </div>
+            </div>
+
+            <div class="hint-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+              <span>This password can't be recovered. If you forget it, the file is gone for good — store it somewhere safe.</span>
+            </div>
+          </div>
+
+          <button class="btn-primary" id="primaryFromPassword">Encrypt file</button>
+        </div>
+
+        <!-- PROGRESS -->
+        <div data-panel="progress">
+          <div class="file-card mini dim">
+            <div class="file-icon"><div class="spin-ring"></div></div>
+            <div class="file-meta">
+              <div class="file-name">Quarterly-Report.pdf</div>
+              <div class="file-size" id="progressCaptionSmall">Encrypting with AES-256-GCM</div>
+            </div>
+          </div>
+
+          <div class="progress-block">
+            <div class="progress-status">
+              <span class="label" id="progressLabel">Encrypting file…</span>
+              <span class="pct" id="progressPct">38%</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+            <p class="progress-caption">Your file never leaves this device.</p>
+          </div>
+
+          <button class="cancel-link">Cancel</button>
+        </div>
+
+        <!-- SUCCESS -->
+        <div data-panel="success">
+          <div class="result">
+            <div class="result-badge success">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="result-title" id="successTitle">File encrypted</div>
+            <div class="result-sub" id="successSub">Saved as <b>Quarterly-Report.pdf.cipher</b> in the same folder.</div>
+            <div class="meta-row">
+              <span class="meta-pill">AES-256-GCM</span>
+              <span class="meta-pill">2.4 MB</span>
+              <span class="meta-pill">0.8s</span>
+            </div>
+            <div class="result-actions">
+              <button class="btn-primary" id="successPrimary">Show in folder</button>
+              <button class="btn-ghost" id="successGhost">Encrypt another file</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ERROR -->
+        <div data-panel="error">
+          <div class="file-card dim">
+            <div class="file-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+              <span class="file-ext" id="errorExt">CPH</span>
+            </div>
+            <div class="file-meta">
+              <div class="file-name" id="errorFileName">Quarterly-Report.pdf.cipher</div>
+              <div class="file-size">2.4 MB</div>
+            </div>
+          </div>
+
+          <div class="pw-section">
+            <div>
+              <label class="field-label">Password</label>
+              <div class="field-wrap error">
+                <input type="password" value="wrongpass1" id="pwError">
+                <button class="field-toggle" data-eye="pwError"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              </div>
+              <div class="error-msg">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+                <span id="errorMsg">Incorrect password — this doesn't match the file.</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-primary" id="errorPrimary">Try again</button>
+          <button class="btn-ghost">Choose a different file</button>
+        </div>
+
+      </div>
+
+      <div class="window-footer">
+        <div class="footer-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+          AES-256-GCM
+        </div>
+        <a class="footer-link" href="#" onclick="return false;">How it works</a>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  const navButtons = document.querySelectorAll('#stateNav button');
+  const panels = document.querySelectorAll('[data-panel]');
+  const headline = document.getElementById('headline');
+  const segmented = document.getElementById('segmented');
+  const dropzone = document.getElementById('dropzone');
+
+  const copy = {
+    encrypt: {
+      empty: "Choose a file to protect it with a password only you know.",
+      file: "Set a password to encrypt this file.",
+      password: "Choose a strong password — you'll need it to unlock this file later.",
+      progress: "Sit tight, this only takes a moment.",
+      success: "",
+      error: "Something interrupted the process."
+    },
+    decrypt: {
+      empty: "Choose an encrypted .cipher file to unlock it.",
+      file: "Enter the password used to encrypt this file.",
+      password: "Enter the password used to encrypt this file.",
+      progress: "Sit tight, this only takes a moment.",
+      success: "",
+      error: "That password doesn't unlock this file."
+    }
+  };
+
+  let mode = 'encrypt';
+  let current = 'empty';
+
+  function applyModeCopy(){
+    document.getElementById('primaryFromPassword').textContent = mode === 'encrypt' ? 'Encrypt file' : 'Decrypt file';
+    document.getElementById('errorPrimary').textContent = 'Try again';
+    document.getElementById('progressLabel').textContent = mode === 'encrypt' ? 'Encrypting file…' : 'Decrypting file…';
+    document.getElementById('progressCaptionSmall').textContent = mode === 'encrypt' ? 'Encrypting with AES-256-GCM' : 'Verifying password';
+    document.getElementById('confirmField').style.display = mode === 'encrypt' ? 'block' : 'none';
+
+    if(mode === 'encrypt'){
+      document.getElementById('successTitle').textContent = 'File encrypted';
+      document.getElementById('successSub').innerHTML = 'Saved as <b>Quarterly-Report.pdf.cipher</b> in the same folder.';
+      document.getElementById('successPrimary').textContent = 'Show in folder';
+      document.getElementById('successGhost').textContent = 'Encrypt another file';
+      document.getElementById('errorFileName').textContent = 'Quarterly-Report.pdf';
+      document.getElementById('errorExt').textContent = 'PDF';
+      document.getElementById('errorMsg').textContent = "Encryption failed before it finished. Your original file wasn't touched.";
+    } else {
+      document.getElementById('successTitle').textContent = 'File decrypted';
+      document.getElementById('successSub').innerHTML = 'Restored as <b>Quarterly-Report.pdf</b> in the same folder.';
+      document.getElementById('successPrimary').textContent = 'Show in folder';
+      document.getElementById('successGhost').textContent = 'Decrypt another file';
+      document.getElementById('errorFileName').textContent = 'Quarterly-Report.pdf.cipher';
+      document.getElementById('errorExt').textContent = 'CPH';
+      document.getElementById('errorMsg').textContent = "Incorrect password — this doesn't match the file.";
+    }
+  }
+
+  document.querySelectorAll('[data-mode-btn]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      mode = btn.dataset.modeBtn;
+      segmented.dataset.mode = mode;
+      document.querySelectorAll('[data-mode-btn]').forEach(b=>b.classList.toggle('active', b===btn));
+      applyModeCopy();
+      headline.textContent = copy[mode][current] || '';
+    });
+  });
+
+  function goTo(state){
+    current = state;
+    panels.forEach(p => p.classList.toggle('on', p.dataset.panel === state));
+    navButtons.forEach(b => b.classList.toggle('active', b.dataset.goto === state));
+    headline.textContent = copy[mode][state] || '';
+    headline.style.display = (state === 'success') ? 'none' : 'block';
+    if(state === 'progress'){ animateProgress(); }
+  }
+
+  navButtons.forEach(b=>{
+    b.addEventListener('click', ()=> goTo(b.dataset.goto));
+  });
+
+  function animateProgress(){
+    const fill = document.getElementById('progressFill');
+    const pct = document.getElementById('progressPct');
+    let v = 12;
+    fill.style.width = v + '%';
+    pct.textContent = v + '%';
+    clearInterval(window.__prog);
+    window.__prog = setInterval(()=>{
+      v += Math.random()*14;
+      if(v >= 100){ v = 100; clearInterval(window.__prog); }
+      fill.style.width = v + '%';
+      pct.textContent = Math.round(v) + '%';
+    }, 260);
+  }
+
+  // password field -> triggers progress -> success (real interaction demo)
+  document.getElementById('primaryFromPassword').addEventListener('click', ()=>{
+    goTo('progress');
+    setTimeout(()=> goTo('success'), 1500);
+  });
+  document.getElementById('successGhost').addEventListener('click', ()=> goTo('empty'));
+  document.getElementById('errorPrimary').addEventListener('click', ()=> goTo('password'));
+
+  // eye toggles
+  document.querySelectorAll('[data-eye]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const input = document.getElementById(btn.dataset.eye);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    });
+  });
+
+  // dropzone interactions
+  ['dragenter','dragover'].forEach(evt=>{
+    dropzone.addEventListener(evt, e=>{ e.preventDefault(); dropzone.classList.add('drag'); });
+  });
+  ['dragleave','drop'].forEach(evt=>{
+    dropzone.addEventListener(evt, e=>{ e.preventDefault(); dropzone.classList.remove('drag'); });
+  });
+  dropzone.addEventListener('drop', ()=> goTo('file'));
+  dropzone.addEventListener('click', ()=> goTo('file'));
+
+  document.querySelectorAll('[data-panel="file"] .icon-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=> goTo('empty'));
+  });
+
+  applyModeCopy();
+  goTo('empty');
+</script>
+</body>
+</html>
