@@ -826,11 +826,14 @@
 
   document.querySelectorAll('[data-mode-btn]').forEach(btn => {
     btn.addEventListener('click', () => {
-      mode = btn.dataset.modeBtn;
-      segmented.dataset.mode = mode;
-      document.querySelectorAll('[data-mode-btn]').forEach(b => b.classList.toggle('active', b === btn));
-      applyModeCopy();
-      headline.textContent = copy[mode][currentPanel] || '';
+      const targetMode = btn.dataset.modeBtn;
+      if (mode !== targetMode) {
+        mode = targetMode;
+        segmented.dataset.mode = mode;
+        document.querySelectorAll('[data-mode-btn]').forEach(b => b.classList.toggle('active', b === btn));
+        applyModeCopy();
+        resetFileSelection();
+      }
     });
   });
 
@@ -1065,9 +1068,11 @@
     updateProgress(100, 'Complete!');
 
     setTimeout(() => {
+      document.getElementById('successTitle').textContent = 'File encrypted';
       document.getElementById('successSub').innerHTML = `Saved as <b>${resultDownloadName}</b>`;
       document.getElementById('successMetaSize').textContent = formatBytes(resultBlob.size);
       document.getElementById('successMetaTime').textContent = elapsedSec;
+      document.getElementById('successGhost').textContent = 'Encrypt another file';
       goTo('success');
     }, 300);
   }
@@ -1137,9 +1142,11 @@
       updateProgress(100, 'Complete!');
 
       setTimeout(() => {
+        document.getElementById('successTitle').textContent = 'File decrypted';
         document.getElementById('successSub').innerHTML = `Restored as <b>${resultDownloadName}</b>`;
         document.getElementById('successMetaSize').textContent = formatBytes(resultBlob.size);
         document.getElementById('successMetaTime').textContent = elapsedSec;
+        document.getElementById('successGhost').textContent = 'Decrypt another file';
         goTo('success');
       }, 300);
 
